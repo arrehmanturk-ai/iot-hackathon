@@ -116,11 +116,3 @@ docs/               Architecture diagram (SVG)
 5. **Bonus: Timestream + Grafana** — deploy `lambda/snowflake_to_timestream.py`
    on a schedule (e.g. EventBridge every 5 min), point a Grafana Timestream
    data source at the resulting table, and import `grafana/dashboard.json`.
-
-## Submission checklist mapping
-
-- GitHub repo → this repo
-- Architecture diagram → `docs/architecture.svg`
-- Screenshots → capture these yourself once deployed
-- README → this file
-- 5-min demo → walk through Postgres row → CDC event → Snowflake Gold row
