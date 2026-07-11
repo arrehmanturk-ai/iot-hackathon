@@ -1,0 +1,21 @@
+{
+  "version": "54.0.0",
+  "files": {
+    "2703aebced85598aa53b85c0e4ceec5b7b0c629661bd72f9b90cac9747e779eb": {
+      "displayName": "IotMskStack Template",
+      "source": {
+        "path": "IotMskStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "150105760283-us-east-1-76ab2727": {
+          "bucketName": "cdk-hnb659fds-assets-150105760283-us-east-1",
+          "objectKey": "2703aebced85598aa53b85c0e4ceec5b7b0c629661bd72f9b90cac9747e779eb.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::150105760283:role/cdk-hnb659fds-file-publishing-role-150105760283-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

@@ -1,0 +1,121 @@
+<svg viewBox="0 0 1300 620" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: #ffffff; stroke: #334155; stroke-width: 1.5; rx: 8; }
+    .p1 { fill: #e0f2fe; }
+    .p2 { fill: #fef3c7; }
+    .label { font-size: 13px; fill: #0f172a; }
+    .sub { font-size: 10.5px; fill: #475569; }
+    .phase { font-size: 15px; font-weight: bold; fill: #1e293b; }
+    .arrow { stroke: #475569; stroke-width: 2; marker-end: url(#arrow); fill: none; }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1300" height="620" fill="#f8fafc" />
+
+  <text x="20" y="30" class="phase">Phase 1 — Ingestion &amp; On-Prem Simulation</text>
+
+  <rect x="20" y="50" width="150" height="60" class="box p1" />
+  <text x="30" y="75" class="label">IoT Sensors</text>
+  <text x="30" y="92" class="sub">(Device Simulator)</text>
+
+  <rect x="210" y="50" width="150" height="60" class="box p1" />
+  <text x="220" y="75" class="label">AWS IoT Core</text>
+  <text x="220" y="92" class="sub">MQTT</text>
+
+  <rect x="400" y="50" width="150" height="60" class="box p1" />
+  <text x="410" y="75" class="label">Kafka MSK</text>
+  <text x="410" y="92" class="sub">iot-events topic</text>
+
+  <rect x="590" y="50" width="170" height="60" class="box p1" />
+  <text x="600" y="72" class="label">Kafka Connect</text>
+  <text x="600" y="88" class="sub">JDBC Sink</text>
+  <text x="600" y="102" class="sub">Connector</text>
+
+  <rect x="800" y="50" width="170" height="60" class="box p1" />
+  <text x="810" y="72" class="label">PostgreSQL EC2</text>
+  <text x="810" y="88" class="sub">private subnet</text>
+  <text x="810" y="102" class="sub">(on-prem sim)</text>
+
+  <rect x="590" y="140" width="170" height="55" class="box p1" />
+  <text x="600" y="163" class="label">Kafka S3 Sink</text>
+  <text x="600" y="179" class="sub">(optional backup)</text>
+
+  <rect x="800" y="140" width="170" height="55" class="box p1" />
+  <text x="810" y="163" class="label">S3 Backup Bucket</text>
+
+  <path class="arrow" d="M170,80 H210" />
+  <path class="arrow" d="M360,80 H400" />
+  <path class="arrow" d="M550,80 H590" />
+  <path class="arrow" d="M760,80 H800" />
+  <path class="arrow" d="M675,110 V140" />
+  <path class="arrow" d="M760,167 H800" />
+
+  <line x1="0" y1="230" x2="1300" y2="230" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4" />
+
+  <text x="20" y="260" class="phase">Phase 2 — Cloud Migration, Processing &amp; Analytics</text>
+
+  <rect x="20" y="280" width="170" height="60" class="box p2" />
+  <text x="30" y="302" class="label">PostgreSQL EC2</text>
+  <text x="30" y="318" class="sub">WAL (logical)</text>
+
+  <rect x="230" y="280" width="170" height="60" class="box p2" />
+  <text x="240" y="302" class="label">Debezium CDC</text>
+  <text x="240" y="318" class="sub">Kafka Connect source</text>
+
+  <rect x="440" y="280" width="180" height="60" class="box p2" />
+  <text x="450" y="302" class="label">Kafka MSK</text>
+  <text x="450" y="318" class="sub">cdc.public.iot_events</text>
+
+  <rect x="660" y="280" width="180" height="60" class="box p2" />
+  <text x="670" y="302" class="label">Snowflake Connector</text>
+  <text x="670" y="318" class="sub">Kafka sink</text>
+
+  <rect x="880" y="280" width="150" height="60" class="box p2" />
+  <text x="890" y="302" class="label">Snowflake</text>
+  <text x="890" y="318" class="sub">RAW (Bronze)</text>
+
+  <path class="arrow" d="M190,310 H230" />
+  <path class="arrow" d="M400,310 H440" />
+  <path class="arrow" d="M620,310 H660" />
+  <path class="arrow" d="M840,310 H880" />
+
+  <rect x="880" y="380" width="150" height="55" class="box p2" />
+  <text x="890" y="403" class="label">dbt Silver</text>
+  <text x="890" y="418" class="sub">CLEAN schema</text>
+
+  <rect x="880" y="460" width="150" height="55" class="box p2" />
+  <text x="890" y="483" class="label">dbt Gold</text>
+  <text x="890" y="498" class="sub">ANALYTICS schema</text>
+
+  <path class="arrow" d="M955,340 V380" />
+  <path class="arrow" d="M955,435 V460" />
+
+  <rect x="660" y="460" width="180" height="55" class="box p2" />
+  <text x="670" y="483" class="label">Streamlit Dashboard</text>
+  <text x="670" y="498" class="sub">reads Gold layer</text>
+
+  <path class="arrow" d="M880,487 H840" />
+
+  <rect x="440" y="460" width="180" height="55" class="box p2" />
+  <text x="450" y="482" class="label">Lambda</text>
+  <text x="450" y="498" class="sub">Snowflake to Timestream</text>
+
+  <path class="arrow" d="M660,487 H620" />
+
+  <rect x="230" y="460" width="170" height="55" class="box p2" />
+  <text x="240" y="482" class="label">AWS Timestream</text>
+
+  <path class="arrow" d="M440,487 H400" />
+
+  <rect x="20" y="460" width="170" height="55" class="box p2" />
+  <text x="30" y="482" class="label">Grafana</text>
+  <text x="30" y="498" class="sub">time-series charts</text>
+
+  <path class="arrow" d="M230,487 H190" />
+
+  <text x="20" y="580" class="sub">Bonus path (Task 2.5): Snowflake → Lambda → Timestream → Grafana, in parallel with the Streamlit path.</text>
+</svg>

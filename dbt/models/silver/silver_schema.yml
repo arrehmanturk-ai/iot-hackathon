@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: RAW
+    tables:
+      - name: iot_events
+
+models:
+  - name: silver_iot_events
+    description: Cleaned, typed IoT events parsed from the Debezium CDC bronze table.
+    columns:
+      - name: device_id
+        tests:
+          - not_null
+      - name: event_time
+        tests:
+          - not_null
+      - name: aqi_severity
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['good', 'moderate', 'unhealthy_sensitive', 'unhealthy', 'hazardous', 'unknown']

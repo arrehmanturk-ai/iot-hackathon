@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: gold_daily_device_agg
+    description: Daily per-device aggregates powering the Streamlit dashboard and Grafana panel.
+    columns:
+      - name: device_id
+        tests:
+          - not_null
+      - name: event_date
+        tests:
+          - not_null
+      - name: event_count
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - device_id
+            - event_date

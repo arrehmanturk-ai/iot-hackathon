@@ -1,0 +1,36 @@
+{
+  "title": "IoT Fleet - Timestream Live Panel",
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "refresh": "30s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Average AQI by device",
+      "type": "timeseries",
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "grafana-timestream-datasource", "uid": "REPLACE_WITH_DATASOURCE_UID" },
+      "targets": [
+        {
+          "refId": "A",
+          "rawQuery": true,
+          "queryText": "SELECT time, measure_value::double AS avg_aqi, device_id FROM \"iot_hackathon\".\"device_metrics\" WHERE measure_name = 'avg_aqi' AND time > ago(1h) ORDER BY time"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Event count by device",
+      "type": "barchart",
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "grafana-timestream-datasource", "uid": "REPLACE_WITH_DATASOURCE_UID" },
+      "targets": [
+        {
+          "refId": "A",
+          "rawQuery": true,
+          "queryText": "SELECT time, measure_value::double AS event_count, device_id FROM \"iot_hackathon\".\"device_metrics\" WHERE measure_name = 'event_count' AND time > ago(1h) ORDER BY time"
+        }
+      ]
+    }
+  ]
+}

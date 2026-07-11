@@ -1,0 +1,162 @@
+{
+  "/IotMskStack": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...jsii runtime, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    },
+    {
+      "type": "aws:cdk:warning",
+      "data": "No cross-stack-reference strength configured, defaulting to \"strong\". We recommend you set feature flag \"@aws-cdk/core:defaultCrossStackReferences\" to \"both\", then deploy everywhere, then set it to \"weak\". Alternatively, set it to \"strong\" explicitly to lock in the current producer-protecting behavior. (See: https://github.com/aws/aws-cdk/blob/main/packages/aws-cdk-lib/README.md#reference-strength) [ack: @aws-cdk/core:crossStackReferencesDefaultStrong]",
+      "trace": [
+        "Annotations.addMessage (C:\\Users\\smc\\AppData\\Local\\Temp\\jsii-kernel-FUbxkc\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:3441)",
+        "Annotations.addWarningV2 (C:\\Users\\smc\\AppData\\Local\\Temp\\jsii-kernel-FUbxkc\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:2129)",
+        "resolveValue (C:\\Users\\smc\\AppData\\Local\\Temp\\jsii-kernel-FUbxkc\\node_modules\\aws-cdk-lib\\core\\lib\\private\\refs.js:1:6065)",
+        "resolveReferences (C:\\Users\\smc\\AppData\\Local\\Temp\\jsii-kernel-FUbxkc\\node_modules\\aws-cdk-lib\\core\\lib\\private\\refs.js:1:4778)",
+        "prepareApp (C:\\Users\\smc\\AppData\\Local\\Temp\\jsii-kernel-FUbxkc\\node_modules\\aws-cdk-lib\\core\\lib\\private\\prepare-app.js:1:1514)",
+        "synthesize (C:\\Users\\smc\\AppData\\Local\\Temp\\jsii-kernel-FUbxkc\\node_modules\\aws-cdk-lib\\core\\lib\\private\\synthesis.js:1:3701)",
+        "App.synth (C:\\Users\\smc\\AppData\\Local\\Temp\\jsii-kernel-FUbxkc\\node_modules\\aws-cdk-lib\\core\\lib\\stage.js:1:4636)",
+        "App.synth (C:\\Users\\smc\\AppData\\Local\\Temp\\jsii-kernel-FUbxkc\\node_modules\\aws-cdk-lib\\core\\lib\\app.js:1:4814)",
+        "C:\\Users\\smc\\AppData\\Local\\Temp\\tmpdbzqz4zg\\lib\\program.js:1:55650",
+        "Kernel._Kernel_ensureSync (C:\\Users\\smc\\AppData\\Local\\Temp\\tmpdbzqz4zg\\lib\\program.js:1:71267)",
+        "Kernel.invoke (C:\\Users\\smc\\AppData\\Local\\Temp\\tmpdbzqz4zg\\lib\\program.js:1:55595)",
+        "KernelHost.processRequest (C:\\Users\\smc\\AppData\\Local\\Temp\\tmpdbzqz4zg\\lib\\program.js:1:228006)",
+        "KernelHost.run (C:\\Users\\smc\\AppData\\Local\\Temp\\tmpdbzqz4zg\\lib\\program.js:1:226990)",
+        "Immediate._onImmediate (C:\\Users\\smc\\AppData\\Local\\Temp\\tmpdbzqz4zg\\lib\\program.js:1:227034)",
+        "process.processImmediate (node:internal/timers:504:21)"
+      ]
+    }
+  ],
+  "/IotMskStack/IotMskCluster": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "IotMskCluster"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...jsii runtime, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/IotMskStack/MskClusterArn": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MskClusterArn"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...jsii runtime, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/IotMskStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/IotMskStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/IotMskStack/MskSecurityGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MskSecurityGroup2E58EEA4"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, jsii runtime, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/IotMskStack/MskSecurityGroup/from IotMskStackMskSecurityGroupAA88A779:9092-9098": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MskSecurityGroupfromIotMskStackMskSecurityGroupAA88A7799092909849CDBCB3"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, jsii runtime, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/IotMskStack/MskSecurityGroup/from IotMskStackMskSecurityGroupAA88A779:2181-2182": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MskSecurityGroupfromIotMskStackMskSecurityGroupAA88A779218121820E165FD4"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, jsii runtime, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/IotMskStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, jsii runtime...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/IotMskStack/Exports/Output{\"Fn::GetAtt\":[\"MskSecurityGroup2E58EEA4\",\"GroupId\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttMskSecurityGroup2E58EEA4GroupId3CDC6336"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, jsii runtime...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/IotMskStack/Exports/Output{\"Fn::GetAtt\":[\"IotMskCluster\",\"Arn\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttIotMskClusterArnA2362FAA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, jsii runtime...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ]
+}

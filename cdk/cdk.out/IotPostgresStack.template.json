@@ -1,0 +1,345 @@
+{
+ "Resources": {
+  "PostgresSecretE142E1BC": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "GenerateSecretString": {
+     "ExcludePunctuation": true,
+     "GenerateStringKey": "password",
+     "PasswordLength": 20,
+     "SecretStringTemplate": "{\"username\":\"iot_app\"}"
+    },
+    "Name": "iot/postgres"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/PostgresSecret/Resource"
+   }
+  },
+  "SsmInstanceRole79A63A0B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ec2.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonSSMManagedInstanceCore"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/SsmInstanceRole/Resource"
+   }
+  },
+  "SsmInstanceRoleDefaultPolicy7181DA5F": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "PostgresSecretE142E1BC"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "SsmInstanceRoleDefaultPolicy7181DA5F",
+    "Roles": [
+     {
+      "Ref": "SsmInstanceRole79A63A0B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/SsmInstanceRole/DefaultPolicy/Resource"
+   }
+  },
+  "PostgresSecurityGroupEA9E32B6": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "IotPostgresStack/PostgresSecurityGroup",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Fn::ImportValue": "IotVpcStack:ExportsOutputRefIotVpc88BA8F602913CC27"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/PostgresSecurityGroup/Resource"
+   }
+  },
+  "PostgresSecurityGroupfromIotMskStackMskSecurityGroupAA88A779543270C81B98": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Kafka Connect -> Postgres",
+    "FromPort": 5432,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "PostgresSecurityGroupEA9E32B6",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::ImportValue": "IotMskStack:ExportsOutputFnGetAttMskSecurityGroup2E58EEA4GroupId3CDC6336"
+    },
+    "ToPort": 5432
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/PostgresSecurityGroup/from IotMskStackMskSecurityGroupAA88A779:5432"
+   }
+  },
+  "PostgresSecurityGroupfromIotPostgresStackBastionSecurityGroup9E70B5AB5432247A43AC": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Bastion -> Postgres",
+    "FromPort": 5432,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "PostgresSecurityGroupEA9E32B6",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "BastionSecurityGroupDAB89EBD",
+      "GroupId"
+     ]
+    },
+    "ToPort": 5432
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/PostgresSecurityGroup/from IotPostgresStackBastionSecurityGroup9E70B5AB:5432"
+   }
+  },
+  "BastionSecurityGroupDAB89EBD": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "IotPostgresStack/BastionSecurityGroup",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Fn::ImportValue": "IotVpcStack:ExportsOutputRefIotVpc88BA8F602913CC27"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/BastionSecurityGroup/Resource"
+   }
+  },
+  "PostgresInstanceInstanceProfileB81C66FB": {
+   "Type": "AWS::IAM::InstanceProfile",
+   "Properties": {
+    "Roles": [
+     {
+      "Ref": "SsmInstanceRole79A63A0B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/PostgresInstance/InstanceProfile"
+   }
+  },
+  "PostgresInstance19CDD68A": {
+   "Type": "AWS::EC2::Instance",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "IamInstanceProfile": {
+     "Ref": "PostgresInstanceInstanceProfileB81C66FB"
+    },
+    "ImageId": {
+     "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter"
+    },
+    "InstanceType": "t3.small",
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "PostgresSecurityGroupEA9E32B6",
+       "GroupId"
+      ]
+     }
+    ],
+    "SubnetId": {
+     "Fn::ImportValue": "IotVpcStack:ExportsOutputRefIotVpcprivateSubnet1SubnetBE4911FC4FBC5F06"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "IotPostgresStack/PostgresInstance"
+     }
+    ],
+    "UserData": {
+     "Fn::Base64": "#!/bin/bash\n#!/bin/bash\ndnf install -y postgresql15 postgresql15-server jq awscli\npostgresql-setup --initdb\nsystemctl enable --now postgresql\n\n# Pull the generated password out of Secrets Manager instead of hardcoding it\nDB_PASSWORD=$(aws secretsmanager get-secret-value --secret-id iot/postgres --region us-east-1 --query SecretString --output text | jq -r .password)\n\nsudo -u postgres psql -c \"CREATE DATABASE iotdb;\"\nsudo -u postgres psql -d iotdb -c \"CREATE TABLE iot_events (id SERIAL PRIMARY KEY, device_id VARCHAR(50), latitude DOUBLE PRECISION, longitude DOUBLE PRECISION, event_timestamp TIMESTAMP);\"\nsudo -u postgres psql -c \"CREATE USER iot_app WITH PASSWORD '$DB_PASSWORD';\"\nsudo -u postgres psql -c \"GRANT ALL PRIVILEGES ON DATABASE iotdb TO iot_app;\"\nsudo -u postgres psql -d iotdb -c \"GRANT ALL ON iot_events TO iot_app;\"\nsudo -u postgres psql -d iotdb -c \"GRANT ALL ON SEQUENCE iot_events_id_seq TO iot_app;\"\n\n# Enable logical replication for Debezium CDC\nsudo -u postgres psql -c \"ALTER SYSTEM SET wal_level = logical;\"\nsudo -u postgres psql -c \"ALTER SYSTEM SET max_replication_slots = 4;\"\nsudo -u postgres psql -c \"ALTER SYSTEM SET max_wal_senders = 4;\"\n\n# Allow remote connections\necho \"listen_addresses = '*'\" >> /var/lib/pgsql/data/postgresql.conf\necho \"host    all             all             10.0.0.0/16            md5\" >> /var/lib/pgsql/data/pg_hba.conf\n\nsystemctl restart postgresql\n"
+    }
+   },
+   "DependsOn": [
+    "SsmInstanceRoleDefaultPolicy7181DA5F",
+    "SsmInstanceRole79A63A0B"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/PostgresInstance/Resource"
+   }
+  },
+  "BastionInstanceInstanceProfile9D596C64": {
+   "Type": "AWS::IAM::InstanceProfile",
+   "Properties": {
+    "Roles": [
+     {
+      "Ref": "SsmInstanceRole79A63A0B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/BastionInstance/InstanceProfile"
+   }
+  },
+  "BastionInstance3B3E1DA4": {
+   "Type": "AWS::EC2::Instance",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "IamInstanceProfile": {
+     "Ref": "BastionInstanceInstanceProfile9D596C64"
+    },
+    "ImageId": {
+     "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter"
+    },
+    "InstanceType": "t3.micro",
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "BastionSecurityGroupDAB89EBD",
+       "GroupId"
+      ]
+     }
+    ],
+    "SubnetId": {
+     "Fn::ImportValue": "IotVpcStack:ExportsOutputRefIotVpcpublicSubnet1Subnet3DA479BD2B12F567"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "IotPostgresStack/BastionInstance"
+     }
+    ],
+    "UserData": {
+     "Fn::Base64": "#!/bin/bash\ndnf install -y postgresql15\n"
+    }
+   },
+   "DependsOn": [
+    "SsmInstanceRoleDefaultPolicy7181DA5F",
+    "SsmInstanceRole79A63A0B"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/BastionInstance/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/32NTQ6CMBCFz+K+VMDEC7gwriRwADPWQSvQkplpCCG9uwE0unL1fvLyvVzn+0ynGxg4Mbcmae1VT5WAaRQMfJkYDaFwBw7uSHqqlqwOtVtdVBY6PZW+xblctPCtNeMcv+7kWMAZLMjXtsWo0OQLLZCV8Ug+9G/on+Lk7oTM6gP7Bce4HAJBh4KkSmQfaN2cg/RBoipGeXi33eks11m6ebK1CQUntkNdrvoCUY+tCxABAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotPostgresStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Parameters": {
+  "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter": {
+   "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+   "Default": "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64"
+  },
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Outputs": {
+  "PostgresPrivateIp": {
+   "Value": {
+    "Fn::GetAtt": [
+     "PostgresInstance19CDD68A",
+     "PrivateIp"
+    ]
+   }
+  },
+  "BastionInstanceId": {
+   "Value": {
+    "Ref": "BastionInstance3B3E1DA4"
+   }
+  },
+  "PostgresInstanceId": {
+   "Value": {
+    "Ref": "PostgresInstance19CDD68A"
+   }
+  },
+  "PostgresSecretArn": {
+   "Value": {
+    "Ref": "PostgresSecretE142E1BC"
+   }
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

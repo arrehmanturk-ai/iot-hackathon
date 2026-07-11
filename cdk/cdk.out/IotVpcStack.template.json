@@ -1,0 +1,471 @@
+{
+ "Resources": {
+  "IotVpc88BA8F60": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "iot-hackathon-vpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/Resource"
+   }
+  },
+  "IotVpcpublicSubnet1Subnet3DA479BD": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.0.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "IotVpcStack/IotVpc/publicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IotVpc88BA8F60"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/publicSubnet1/Subnet"
+   }
+  },
+  "IotVpcpublicSubnet1RouteTable03E0329F": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "IotVpcStack/IotVpc/publicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IotVpc88BA8F60"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/publicSubnet1/RouteTable"
+   }
+  },
+  "IotVpcpublicSubnet1RouteTableAssociationFB49B80F": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "IotVpcpublicSubnet1RouteTable03E0329F"
+    },
+    "SubnetId": {
+     "Ref": "IotVpcpublicSubnet1Subnet3DA479BD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/publicSubnet1/RouteTableAssociation"
+   }
+  },
+  "IotVpcpublicSubnet1DefaultRoute06E366E8": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "IotVpcIGWDCA67204"
+    },
+    "RouteTableId": {
+     "Ref": "IotVpcpublicSubnet1RouteTable03E0329F"
+    }
+   },
+   "DependsOn": [
+    "IotVpcVPCGWDF2F9F5D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/publicSubnet1/DefaultRoute"
+   }
+  },
+  "IotVpcpublicSubnet1EIPE162BDA9": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "IotVpcStack/IotVpc/publicSubnet1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/publicSubnet1/EIP"
+   }
+  },
+  "IotVpcpublicSubnet1NATGatewayA46F2EB7": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "IotVpcpublicSubnet1EIPE162BDA9",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "IotVpcpublicSubnet1Subnet3DA479BD"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "IotVpcStack/IotVpc/publicSubnet1"
+     }
+    ]
+   },
+   "DependsOn": [
+    "IotVpcpublicSubnet1DefaultRoute06E366E8",
+    "IotVpcpublicSubnet1RouteTableAssociationFB49B80F"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/publicSubnet1/NATGateway"
+   }
+  },
+  "IotVpcpublicSubnet2Subnet47158DD7": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.1.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "IotVpcStack/IotVpc/publicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IotVpc88BA8F60"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/publicSubnet2/Subnet"
+   }
+  },
+  "IotVpcpublicSubnet2RouteTable87224EBE": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "IotVpcStack/IotVpc/publicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IotVpc88BA8F60"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/publicSubnet2/RouteTable"
+   }
+  },
+  "IotVpcpublicSubnet2RouteTableAssociationC33F9A2B": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "IotVpcpublicSubnet2RouteTable87224EBE"
+    },
+    "SubnetId": {
+     "Ref": "IotVpcpublicSubnet2Subnet47158DD7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/publicSubnet2/RouteTableAssociation"
+   }
+  },
+  "IotVpcpublicSubnet2DefaultRoute2DC0482D": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "IotVpcIGWDCA67204"
+    },
+    "RouteTableId": {
+     "Ref": "IotVpcpublicSubnet2RouteTable87224EBE"
+    }
+   },
+   "DependsOn": [
+    "IotVpcVPCGWDF2F9F5D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/publicSubnet2/DefaultRoute"
+   }
+  },
+  "IotVpcprivateSubnet1SubnetBE4911FC": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.2.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "IotVpcStack/IotVpc/privateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IotVpc88BA8F60"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/privateSubnet1/Subnet"
+   }
+  },
+  "IotVpcprivateSubnet1RouteTableDA25EA0C": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "IotVpcStack/IotVpc/privateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IotVpc88BA8F60"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/privateSubnet1/RouteTable"
+   }
+  },
+  "IotVpcprivateSubnet1RouteTableAssociation3D5DC1AE": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "IotVpcprivateSubnet1RouteTableDA25EA0C"
+    },
+    "SubnetId": {
+     "Ref": "IotVpcprivateSubnet1SubnetBE4911FC"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/privateSubnet1/RouteTableAssociation"
+   }
+  },
+  "IotVpcprivateSubnet1DefaultRoute83D50B5A": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "IotVpcpublicSubnet1NATGatewayA46F2EB7"
+    },
+    "RouteTableId": {
+     "Ref": "IotVpcprivateSubnet1RouteTableDA25EA0C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/privateSubnet1/DefaultRoute"
+   }
+  },
+  "IotVpcprivateSubnet2Subnet0FFC3D28": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.3.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "IotVpcStack/IotVpc/privateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IotVpc88BA8F60"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/privateSubnet2/Subnet"
+   }
+  },
+  "IotVpcprivateSubnet2RouteTableDF1B0FA6": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "IotVpcStack/IotVpc/privateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IotVpc88BA8F60"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/privateSubnet2/RouteTable"
+   }
+  },
+  "IotVpcprivateSubnet2RouteTableAssociation687FAAD9": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "IotVpcprivateSubnet2RouteTableDF1B0FA6"
+    },
+    "SubnetId": {
+     "Ref": "IotVpcprivateSubnet2Subnet0FFC3D28"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/privateSubnet2/RouteTableAssociation"
+   }
+  },
+  "IotVpcprivateSubnet2DefaultRouteE6BD7735": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "IotVpcpublicSubnet1NATGatewayA46F2EB7"
+    },
+    "RouteTableId": {
+     "Ref": "IotVpcprivateSubnet2RouteTableDF1B0FA6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/privateSubnet2/DefaultRoute"
+   }
+  },
+  "IotVpcIGWDCA67204": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "iot-hackathon-vpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/IGW"
+   }
+  },
+  "IotVpcVPCGWDF2F9F5D": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "IotVpcIGWDCA67204"
+    },
+    "VpcId": {
+     "Ref": "IotVpc88BA8F60"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/IotVpc/VPCGW"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/0WOwQqDMBBEv8V7TNVC7yKl9FKCFq9lk24xVZNiNhUR/72IxZxm5jEMk/HslPIkgtHF6tnGnZZ8rghUy2B0D1QZn+uPYsXL1KJgwstOq8pLg7Sy4ErrCe8gOww8sNw5qzSQtmYvr+Z8FavcgC5AOMLExKC/QBiGr4ZwMLgXtif/lBOBano0tLASnfWDwoWJiRprDkeeZjxNorfTOh68Id0jLzf9AWZuZyP4AAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotVpcStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "ExportsOutputRefIotVpc88BA8F602913CC27": {
+   "Value": {
+    "Ref": "IotVpc88BA8F60"
+   },
+   "Export": {
+    "Name": "IotVpcStack:ExportsOutputRefIotVpc88BA8F602913CC27"
+   }
+  },
+  "ExportsOutputRefIotVpcprivateSubnet1SubnetBE4911FC4FBC5F06": {
+   "Value": {
+    "Ref": "IotVpcprivateSubnet1SubnetBE4911FC"
+   },
+   "Export": {
+    "Name": "IotVpcStack:ExportsOutputRefIotVpcprivateSubnet1SubnetBE4911FC4FBC5F06"
+   }
+  },
+  "ExportsOutputRefIotVpcprivateSubnet2Subnet0FFC3D28219F77E1": {
+   "Value": {
+    "Ref": "IotVpcprivateSubnet2Subnet0FFC3D28"
+   },
+   "Export": {
+    "Name": "IotVpcStack:ExportsOutputRefIotVpcprivateSubnet2Subnet0FFC3D28219F77E1"
+   }
+  },
+  "ExportsOutputRefIotVpcpublicSubnet1Subnet3DA479BD2B12F567": {
+   "Value": {
+    "Ref": "IotVpcpublicSubnet1Subnet3DA479BD"
+   },
+   "Export": {
+    "Name": "IotVpcStack:ExportsOutputRefIotVpcpublicSubnet1Subnet3DA479BD2B12F567"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

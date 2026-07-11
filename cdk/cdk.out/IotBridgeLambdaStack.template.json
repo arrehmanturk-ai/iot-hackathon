@@ -1,0 +1,229 @@
+{
+ "Resources": {
+  "BridgeLambdaSg6E83DF2D": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "IotBridgeLambdaStack/BridgeLambdaSg",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Fn::ImportValue": "IotVpcStack:ExportsOutputRefIotVpc88BA8F602913CC27"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotBridgeLambdaStack/BridgeLambdaSg/Resource"
+   }
+  },
+  "MskIngressFromBridgeLambda": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Bridge Lambda -> MSK",
+    "FromPort": 9092,
+    "GroupId": {
+     "Fn::ImportValue": "IotMskStack:ExportsOutputFnGetAttMskSecurityGroup2E58EEA4GroupId3CDC6336"
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "BridgeLambdaSg6E83DF2D",
+      "GroupId"
+     ]
+    },
+    "ToPort": 9098
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotBridgeLambdaStack/MskIngressFromBridgeLambda"
+   }
+  },
+  "BridgeLambdaRole40F6B4DD": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotBridgeLambdaStack/BridgeLambdaRole/Resource"
+   }
+  },
+  "BridgeLambdaRoleDefaultPolicy2A9945C0": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "kafka-cluster:Connect",
+        "kafka-cluster:DescribeTopic",
+        "kafka-cluster:WriteData"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "IotMskStack:ExportsOutputFnGetAttIotMskClusterArnA2362FAA"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "IotMskStack:ExportsOutputFnGetAttIotMskClusterArnA2362FAA"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BridgeLambdaRoleDefaultPolicy2A9945C0",
+    "Roles": [
+     {
+      "Ref": "BridgeLambdaRole40F6B4DD"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotBridgeLambdaStack/BridgeLambdaRole/DefaultPolicy/Resource"
+   }
+  },
+  "IotToKafkaBridge35A73080": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-150105760283-us-east-1",
+     "S3Key": "918b91418591d3f88008472f58c8f396a3bb491a4d73ec42f19e26587bf0e1f5.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "MSK_BROKERS": "REPLACE_WITH_BOOTSTRAP_BROKER_URLS"
+     }
+    },
+    "Handler": "iot_to_kafka.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "BridgeLambdaRole40F6B4DD",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 30,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "BridgeLambdaSg6E83DF2D",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Fn::ImportValue": "IotVpcStack:ExportsOutputRefIotVpcprivateSubnet1SubnetBE4911FC4FBC5F06"
+      },
+      {
+       "Fn::ImportValue": "IotVpcStack:ExportsOutputRefIotVpcprivateSubnet2Subnet0FFC3D28219F77E1"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "BridgeLambdaRoleDefaultPolicy2A9945C0",
+    "BridgeLambdaRole40F6B4DD"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "IotBridgeLambdaStack/IotToKafkaBridge/Resource",
+    "aws:asset:path": "asset.918b91418591d3f88008472f58c8f396a3bb491a4d73ec42f19e26587bf0e1f5",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/32LSw6CMBCGz8K+jAKJezXRuNLAAcxYKo5Aa5hpCGl6d1ONW1ff/yyh3BSwznDmXLd9PtANQiOoe4UzX4PRJYTGaD+RLMfJ+Zfa3+3/4GS7yTBHRThCqN1g0uTDixtIL8l+VVQDjrcWIRy81ULOpu6no+LqisxGGLYJiivYed0b2SGbqD5hI9iR7dLx7OXlJarLIg9nVxUUJRTr7MlE+eSt0Gig/vINOwrugfkAAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotBridgeLambdaStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "BridgeLambdaArn": {
+   "Value": {
+    "Fn::GetAtt": [
+     "IotToKafkaBridge35A73080",
+     "Arn"
+    ]
+   }
+  },
+  "NextStep": {
+   "Value": "Create an IoT Core Rule with SQL \"SELECT * FROM 'simulator/+/data'\" and action = this Lambda"
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

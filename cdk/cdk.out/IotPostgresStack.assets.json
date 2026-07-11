@@ -1,0 +1,21 @@
+{
+  "version": "54.0.0",
+  "files": {
+    "335b9316ca50ab5f68a90fe9e0684813126cdd3679d4e35a39fb9798b116b77e": {
+      "displayName": "IotPostgresStack Template",
+      "source": {
+        "path": "IotPostgresStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "150105760283-us-east-1-d56d131a": {
+          "bucketName": "cdk-hnb659fds-assets-150105760283-us-east-1",
+          "objectKey": "335b9316ca50ab5f68a90fe9e0684813126cdd3679d4e35a39fb9798b116b77e.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::150105760283:role/cdk-hnb659fds-file-publishing-role-150105760283-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

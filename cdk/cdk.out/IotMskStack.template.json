@@ -1,0 +1,187 @@
+{
+ "Resources": {
+  "MskSecurityGroup2E58EEA4": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for MSK cluster + Kafka Connect",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Fn::ImportValue": "IotVpcStack:ExportsOutputRefIotVpc88BA8F602913CC27"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotMskStack/MskSecurityGroup/Resource"
+   }
+  },
+  "MskSecurityGroupfromIotMskStackMskSecurityGroupAA88A7799092909849CDBCB3": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Kafka broker traffic",
+    "FromPort": 9092,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "MskSecurityGroup2E58EEA4",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "MskSecurityGroup2E58EEA4",
+      "GroupId"
+     ]
+    },
+    "ToPort": 9098
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotMskStack/MskSecurityGroup/from IotMskStackMskSecurityGroupAA88A779:9092-9098"
+   }
+  },
+  "MskSecurityGroupfromIotMskStackMskSecurityGroupAA88A779218121820E165FD4": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Zookeeper traffic",
+    "FromPort": 2181,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "MskSecurityGroup2E58EEA4",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "MskSecurityGroup2E58EEA4",
+      "GroupId"
+     ]
+    },
+    "ToPort": 2182
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotMskStack/MskSecurityGroup/from IotMskStackMskSecurityGroupAA88A779:2181-2182"
+   }
+  },
+  "IotMskCluster": {
+   "Type": "AWS::MSK::Cluster",
+   "Properties": {
+    "BrokerNodeGroupInfo": {
+     "ClientSubnets": [
+      {
+       "Fn::ImportValue": "IotVpcStack:ExportsOutputRefIotVpcprivateSubnet1SubnetBE4911FC4FBC5F06"
+      },
+      {
+       "Fn::ImportValue": "IotVpcStack:ExportsOutputRefIotVpcprivateSubnet2Subnet0FFC3D28219F77E1"
+      }
+     ],
+     "InstanceType": "kafka.t3.small",
+     "SecurityGroups": [
+      {
+       "Fn::GetAtt": [
+        "MskSecurityGroup2E58EEA4",
+        "GroupId"
+       ]
+      }
+     ],
+     "StorageInfo": {
+      "EBSStorageInfo": {
+       "VolumeSize": 20
+      }
+     }
+    },
+    "ClusterName": "iot-msk-cluster",
+    "EncryptionInfo": {
+     "EncryptionInTransit": {
+      "ClientBroker": "TLS_PLAINTEXT",
+      "InCluster": true
+     }
+    },
+    "KafkaVersion": "3.6.0",
+    "NumberOfBrokerNodes": 2
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotMskStack/IotMskCluster"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/33KQQrCMBBA0bN0n4xNhF4gC3Gl2ANIjKnGtGnJzFBKyN2LuHf14fE16E5B29gVpXtGOYYHlJ6si8KueC/eaSi9d5wDbac88yLMkP7DOb2yR6xiwghmSGZkJJ/rd7wwLUxVXDd6z+lwBKVBtc0HQ5CZE4XJw+3XHaQLOeubAAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "IotMskStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "MskClusterArn": {
+   "Value": {
+    "Fn::GetAtt": [
+     "IotMskCluster",
+     "Arn"
+    ]
+   }
+  },
+  "ExportsOutputFnGetAttMskSecurityGroup2E58EEA4GroupId3CDC6336": {
+   "Value": {
+    "Fn::GetAtt": [
+     "MskSecurityGroup2E58EEA4",
+     "GroupId"
+    ]
+   },
+   "Export": {
+    "Name": "IotMskStack:ExportsOutputFnGetAttMskSecurityGroup2E58EEA4GroupId3CDC6336"
+   }
+  },
+  "ExportsOutputFnGetAttIotMskClusterArnA2362FAA": {
+   "Value": {
+    "Fn::GetAtt": [
+     "IotMskCluster",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "IotMskStack:ExportsOutputFnGetAttIotMskClusterArnA2362FAA"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

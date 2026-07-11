@@ -1,0 +1,14 @@
+# Copy to ~/.dbt/profiles.yml and fill in your Snowflake trial account details.
+iot_hackathon:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: REPLACE_WITH_ACCOUNT_LOCATOR   # e.g. xy12345.us-east-1
+      user: REPLACE_WITH_USER
+      password: REPLACE_WITH_PASSWORD          # or use key-pair auth (private_key_path)
+      role: HACKATHON_LOADER
+      database: HACKATHON_IOT
+      warehouse: HACKATHON_WH
+      schema: CLEAN
+      threads: 4

@@ -1,0 +1,21 @@
+{
+  "name": "iot-postgres-cdc",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+    "database.hostname": "REPLACE_WITH_POSTGRES_PRIVATE_IP",
+    "database.port": "5432",
+    "database.user": "${secretsManager:iot/postgres/credentials:username}",
+    "database.password": "${secretsManager:iot/postgres/credentials:password}",
+    "database.dbname": "iot_db",
+    "topic.prefix": "cdc",
+    "table.include.list": "public.iot_events",
+    "plugin.name": "pgoutput",
+    "slot.name": "iot_slot",
+    "publication.autocreate.mode": "filtered",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "true"
+  }
+}
